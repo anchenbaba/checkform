@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta charset="utf-8" />
+        <title>表单验证 - anchen8.net</title>
+        <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="checkform.js" type="text/javascript"></script>
+        <!-- <script src="layer/layer.js" type="text/javascript"></script> -->
+        <script>
+            $(document).ready(function() {
+                var example_items = [
+                { name:"username",rule:"username",error:"好好填写用户名",success:"正确",tips:'数字和英文及下划线和.的组合，开头为字母，4-20个字符',ajax:{method:'post',url: 'ajax.php'}},
+                { name:"password",rule:'password',tips:'最小长度:6 最大长度:16'},
+                { name:"confirm_password",rule:'eq',to:'password',tips:'请再输入一遍您上面填写的密码'}, //比较到另一个输入
+                { name:"email",rule:"mail",tips:'请填写真实并且最常用的邮箱'},
+                { name:"age",between:[18,78],tips:'年龄必须大于等于18小于等于78'},
+                { name:"years",rule:"gt",value:3,tips:'必须大于3'},
+                //上面也可以这么写 { name:"years",gt:3,tips:'必须大于3'},
+                // eq = , neq != , gt > , gte >= , lt < , lte <=;
+                { name:"sport[]",checked_limit:[2,2],tips:"请选择2项运动"},
+                { name:"favourite[]",checked_limit:[4,7],tips:"请选择4到7项爱好"},
+                { name:"zhekou",rule:"amount",tips:"请填写折扣系数"}
+                ];
+                //==============================================================================
+                var rules = {
+                        "amount"         : [/^0.([1-9]){1,2}$/,"必须为0.85这样的数字"]
+                    }
+                var items_array2 = [
+                        { name:"password",rule:'password',tips:'最小长度:6 最大长度:16'},
+                        { name:"zhekou",rule:"amount",tips:"请填写折扣系数"}
+                    ];
+                var index='';
+                $('#form3').addRules(rules).checkform({
+                    items           : items_array2,
+                    isBubble        : true,
+                    isAjaxSubmit    : false,
+                    //clearForm       : true,
+                    //require         : 'placeholder',
+                    success         : function(){location.href = "success.html";},//ajax提交成功过后的回调函数
+                    error           : function(){layer.alert('数据提交失败', {icon: 6});},//ajax提交错误后的回调函数
+                    complete        : function(){},//ajax提交完成后的回调函数
+                    beforeSend      : function(){},//ajax提交前的回调函数
+                    //fieldTips       : function(obj,msg,formname){index = layer.tips(msg, obj,{time:0});},
+                    //fieldSuccess    : function(obj,msg,formname){layer.close(index);},
+                    //fieldError      : function(obj,msg,formname){index = layer.tips(msg, obj,{time:0});},
+                    floatTips : {top:0,left:0,width:200,stayShow:true},
+                    // fieldPwdStrong  : function(score,field,formObj){console.log(score)}
+                    });
+
+                //$.checkform.fieldShowFloatTips($('input[name=password]'),'aaa',{top:0,left:0,width:200});
+            });
+        </script>
+    </head>
+    <body>
+    <h3>Jquery表单验证</h3>
+    <form id="form3" method="post" action="post.php">
+    <p>
+    <input type="text" name="info2[login]" style="width:200px;" value="test111" validate='{rule:"username",success:"ok",error:"好好填写用户名",tips:"用户名提示信息" }' />
+    </p>
+    <p>
+    <input type="password" name="password" style="width:200px" value="" placeholder='请输入密码'  />
+    <div class="checkform_pwdstrong">
+        <div class="checkform_pwdstrong_line"> </div>
+        <div class="checkform_pwdstrong_line"> </div>
+        <div class="checkform_pwdstrong_line"> </div>
+        <div class="checkform_pwdstrong_line"> </div>
+        <div class="checkform_pwdstrong_words"> 弱</div>
+        <div class="checkform_pwdstrong_words"> 中</div>
+        <div class="checkform_pwdstrong_words"> 好</div>
+        <div class="checkform_pwdstrong_words"> 强</div>
+    </div>
+    </p>
+    <br />
+    <p>
+      <input type="text" name="fajax" style="width:200px" value="" validate='{rule:"strongpwd",require:false,ajax:{url: "./ajax.php"}}' />
+    </p>
+
+    <p>
+      <input type="text" name="zhekou" style="width:200px" value="" placeholder='aaabbb' />
+    </p>
+    <input type="submit" class="button" value="注册"/>
+    <br />
+    </form>
+    </body>
+</html>
