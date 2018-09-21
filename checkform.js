@@ -3,7 +3,7 @@
 * @Author: anchen
 * @Date:   2015-09-07 16:02:57
  * @Last Modified by: anchen
- * @Last Modified time: 2018-09-13 22:36:56
+ * @Last Modified time: 2018-09-19 15:52:10
 */
 
 (function ($) {
@@ -15,7 +15,7 @@
         // 计算根路径
         if (!options.root) {
             $('script').each(function (a, tag) {
-                miuScript = $(tag).get(0).src.match(/(.*)checkform(\.min)?\.js$/);
+                miuScript = $(tag).get(0).src.match(/(.*)checkform(\.min)?\.js(\?.*)$/);
                 if (miuScript !== null) options.root = miuScript[1];
             });
         }
@@ -378,14 +378,20 @@
         placeholder();
         return this.each(function () {
             //提交事件绑定
-            if (options.isAjaxSubmit) {
+            if (options.submitType == 'ajax') {
                 o.submit(function () {
-                    if (validate()) {//验证通过-ajax提交数据
+                    if (validate()) { // 验证通过-ajax提交数据
                         ajaxSubmit(options);
                     }
-                    return false;
+                    return false; // 阻止表单页跳转
                 });
-            } else {//非ajax提交数据
+            } else if (options.submitType == 'none') {
+                o.submit(function () {
+                    // 只验证 不提交数据到url
+                    options.afterSubmit(validate(), o);
+                    return false; //阻止表单页跳转
+                });
+            } else {
                 o.submit(validate);
             }
         });
@@ -526,10 +532,13 @@
         $('input:submit', obj).val('正在提交');
         $('input:submit', obj).attr('disabled', 'disabled');
     };
+    $.checkform.afterSubmit = function (result, obj) {
+
+    };
     $.checkform.defaults = {
         items: [],
         isBubble: false,
-        isAjaxSubmit: false,
+        submitType: '', // ajax提交数据 none 不提交数据 默认普通方式提交数据
         type: 'POST', // ajax提交表单方式
         dataType: 'json', //default: Intelligent Guess (Other values: xml, json, script, or
         success: $.ajaxsendform.success,//ajax提交成功过后的回调函数
@@ -544,14 +553,16 @@
         fieldSuccess: $.checkform.fieldSuccess,
         fieldError: $.checkform.fieldError,
         fieldPwdStrong: $.checkform.fieldPwdStrong,
-        floatTips: {}
+        floatTips: {},
+        afterSubmit: $.checkform.afterSubmit,
     };
+
     $.checkform.rules = {
         "eng": [/^[A-Za-z]+$/, "只能输入英文"],
         "chn": [/^[\u0391-\uFFE5]+$/, "只能输入汉字"],
-        "mail": [/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, "格式不正确"],
-        "url": [/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/, "格式不正确"],
-        "currency": [/^\d+(\.\d+)?$/, "数字格式有误"],
+        "mail": [/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, "email格式"],
+        "url": [/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/, "url格式"],
+        "currency": [/^\d+(\.\d+)?$/, "数字格式"],
         "number": [/^\d+$/, "只能为数字"],
         "int": [/^[0-9]{1,30}$/, "只能为整数"],
         "double": [/^[-\+]?\d+(\.\d+)?$/, "只能为带小数的数字"],
@@ -560,13 +571,13 @@
         "strongpwd": [/^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$/, "至少7个字符，必须同时含有字母和数字,或者字母大小写"],
         "safe": [/>|<|,|\[|\]|\{|\}|\?|\/|\+|=|\||\'|\\|\"|:|;|\~|\!|\@|\#|\*|\$|\%|\^|\&|\(|\)|`/i, "不能有特殊字符"],
         "dbc": [/[ａ-ｚＡ-Ｚ０-９！＠＃￥％＾＆＊（）＿＋｛｝［］｜：＂＇；．，／？＜＞｀～　]/, "不能有全角字符"],
-        "qq": [/[1-9][0-9]{4,}/, "格式不正确"],
+        "qq": [/[1-9][0-9]{4,}/, "qq号格式"],
         "date": [/^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$/, "格式不正确"],
-        "telephone": [/^1\d{10}$/, "格式不正确"],
-        "mobilephone": [/^((\+86)|(86))?1[3|4|5|7|8]\d{9}$/, "格式不正确"],
-        "zipcode": [/^[1-9]\d{5}$/, "格式不正确"],
-        "bodycard": [/^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|71|(8[12])|91)\d{4}((19\d{2}(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(19\d{2}(0[13578]|1[02])31)|(19\d{2}02(0[1-9]|1\d|2[0-8]))|(19([13579][26]|[2468][048]|0[48])0229))\d{3}(\d|X|x)?$/, "格式不正确"],
-        "ip": [/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/, "IP不正确"],
+        "telephone": [/^1\d{10}$/, "电话号码"],
+        "mobilephone": [/^((\+86)|(86))?1[3|4|5|7|8]\d{9}$/, "手机号"],
+        "zipcode": [/^[1-9]\d{5}$/, "邮编"],
+        "bodycard": [/^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|71|(8[12])|91)\d{4}((19\d{2}(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(19\d{2}(0[13578]|1[02])31)|(19\d{2}02(0[1-9]|1\d|2[0-8]))|(19([13579][26]|[2468][048]|0[48])0229))\d{3}(\d|X|x)?$/, "身份证"],
+        "ip": [/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/, "IP格式"],
         // 函数规则
         "eq": [function (arg1, arg2) { return arg1 == arg2 ? true : false; }, "必须等于"],
         "gt": [function (arg1, arg2) { return arg1 > arg2 ? true : false; }, "必须大于"],

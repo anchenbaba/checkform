@@ -2,164 +2,164 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta charset="utf-8" />
-    <title>表单验证 - anchen8.net</title>
-    <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="checkform.min.js" type="text/javascript"></script>
-    <script>
-        $(document).ready(function () {
-            var rules = {
-                "coupon_amount": [/^0.([1-9]){1,2}$/, "必须为0.85这样的数字"]
-            }
-            var items_array2 = [
-                { name: "info[login]", rule: "username", error: "搞什么飞机，好好填写用户名", tips: '数字和英文及下划线和.的组合，开头为字母，4-20个字符', ajax: { method: 'post', url: 'skygq_check_ajax_form_1_5/ajax.html', success_msg: '恭喜！用户名可用', failure_msg: '用户名已存在' } },
-                { name: "info[password]", rule: 'password', tips: '最小长度:6 最大长度:16' },
-                { name: "info[confirm_password]", rule: 'eq', to: 'info[password]', tips: '请再输入一遍您上面填写的密码' },
-                { name: "info[email]", rule: "mail", tips: '请填写真实并且最常用的邮箱' },
-                { name: "info[age]", between: [18, 78], tips: '年龄必须大于等于18小于等于78' },
-                { name: "info[do_years]", rule: "gt", value: 3, tips: '必须大于3' },
-                { name: "sport[]", checked_limit: [2, 2], tips: "请选择2项运动" },
-                { name: "favourite[]", checked_limit: [4, 7], tips: "请选择4到7项爱好" },
-                { name: "skyzhekou", rule: "coupon_amount", tips: "请填写折扣系数" },
-                { name: "acceptFlyme", eq: 1, tips: "ddd" },
-                { name: "sex", tips: "aa" },
-                { name: "sex2", require: true }
-            ];
-            $('#form3').addRules(rules).checkform({
-                items: items_array2,
-                isAjaxSubmit: true,
-                require: false,
-                //success         : '',
-                dataType: 'json',
-                // fieldError: function (obj, msg, formname) { obj.css('border-color', 'red') },
-                // fieldSuccess: function (obj, msg, formname) { obj.css('border-color', '') },
-                // fieldTips: function (obj, msg, formname) { },
-                // floatTips: { top: 0, left: 0, width: 200, stayShow: true }
-            });
-        });
-    </script>
-    <style>
-        .checkform_tips{color:black}
+  <meta charset="utf-8">
+  <meta charset="utf-8" />
+  <title>表单验证 - anchen8.net</title>
+  <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+  <script src="checkform.min.js" type="text/javascript"></script>
+  <script>
+    $(document).ready(function () {
+      var rules = {
+        "coupon_amount": [/^0.([1-9]){1,2}$/, "必须为0.85这样的数字"]
+      }
+      var items_array2 = [
+        { name: "info[login]", rule: "username", error: "搞什么飞机，好好填写用户名", tips: '数字和英文及下划线和.的组合，开头为字母，4-20个字符', ajax: { method: 'post', url: 'skygq_check_ajax_form_1_5/ajax.html', success_msg: '恭喜！用户名可用', failure_msg: '用户名已存在' } },
+        { name: "info[password]", rule: 'password', tips: '最小长度:6 最大长度:16' },
+        { name: "info[confirm_password]", rule: 'eq', to: 'info[password]', tips: '请再输入一遍您上面填写的密码' },
+        { name: "info[email]", rule: "mail", tips: '请填写真实并且最常用的邮箱' },
+        { name: "info[age]", between: [18, 78], tips: '年龄必须大于等于18小于等于78' },
+        { name: "info[do_years]", rule: "gt", value: 3, tips: '必须大于3' },
+        { name: "sport[]", checked_limit: [2, 2], tips: "请选择2项运动" },
+        { name: "favourite[]", checked_limit: [4, 7], tips: "请选择4到7项爱好" },
+        { name: "skyzhekou", rule: "coupon_amount", tips: "请填写折扣系数" },
+        { name: "acceptFlyme", eq: 1, tips: "ddd" },
+        { name: "sex", tips: "aa" },
+        { name: "sex2", require: true }
+      ];
+      $('#form3').addRules(rules).checkform({
+        items: items_array2,
+        submitType: 'ajax',
+        require: false,
+        //success         : '',
+        dataType: 'json',
+        // fieldError: function (obj, msg, formname) { obj.css('border-color', 'red') },
+        // fieldSuccess: function (obj, msg, formname) { obj.css('border-color', '') },
+        // fieldTips: function (obj, msg, formname) { },
+        // floatTips: { top: 0, left: 0, width: 200, stayShow: true }
+      });
+    });
+  </script>
+  <style>
+    .checkform_tips{color:black}
 .checkform_success{color:green}
 .checkform_error{color:red}
 </style>
 </head>
 
 <body>
-    <h3>Jquery表单验证</h3>
-    <form id="form3" method="post" action="post.php">
-        <p>
-            <input type="text" name="info2[login]" style="width:200px;" value="test111" validate='{rule:"username",success:"ok",error:"好好填写用户名",tips:"用户名提示信息" }' />
-        </p>
-        <br />
-        <p>
-            <input type="password" name="info[password]" style="width:200px" value="" validate='{rule:"password",tips:"passwd数字和英文及下划线和.的组合，开头为字母，4-20个字符" }' />
-        </p>
-        <br />
-        <p>
-            <input name="acceptFlyme" id="accept" type="checkbox" value="1" checked='checked'>123
-        </p>
-        <br />
-        <p> <input type="text" name="fajax" style="width:200px" value="" validate='{rule:"strongpwd",tips:"123",ajax:{url: "./ajax.php"} }' />
-        </p>
-        <br />
-        <p> <input type="radio" name="sex" value="1" />男 <input type="radio" name="sex" value="2" />女</p>
-        <p> <input type="text" name="sex2"></p>
-        <input type="submit" class="button" value="注册" />
-        <br />
-    </form>
-    <form id="form2" method="post" action="post.php">
-        <div class="success">下面是一个同时进行表单验证和表单无刷新提交的例子，返回的数据格式是JSON形式</div>
-        <table width="100%">
-            <tr>
-                <td width="120">
-                    用户名：
-                </td>
-                <td>
-                    <input type="text" name="info[login]" style="width:200px;" value="test" validate='{rule:"username",error:"好好填写用户名",tips:"数字和英文及下划线和.的组合，开头为字母，4-20个字符" }' />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    设置密码：
-                </td>
-                <td>
-                    <input type="password" name="info[password]" style="width:200px" value="KXt7kGsBddsd" validate='{rule:"password",error:"密码格式不正确",tips:"数字和英文及下划线和.的组合，开头为字母，4-20个字符" }' />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    确认密码：
-                </td>
-                <td>
-                    <input type="password" name="info[confirm_password]" style="width:200px" value="KXt7kGsBddsd" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Email：
-                </td>
-                <td>
-                    <input type="text" name="info[email]" style="width:200px;" value="sky64566@yahoo.com.cn" />
-                </td>
-            </tr>
-            <tr>
-                <td width="120">
-                    年龄：
-                </td>
-                <td>
-                    <input type="text" name="info[age]" style="width:200px;" value="test" />
-                </td>
-            </tr>
-            <tr>
-                <td width="120">
-                    工作年限：
-                </td>
-                <td>
-                    <input type="text" name="info[do_years]" style="width:200px;" value="test" />
-                </td>
-            </tr>
-            <tr>
-                <td>兴趣爱好</td>
-                <td>
-                    <input type="checkbox" name="favourite[]" value="1">上网
-                    <input type="checkbox" name="favourite[]" value="2">看书
-                    <input type="checkbox" name="favourite[]" value="3">书法
-                    <input type="checkbox" name="favourite[]" value="4">Jquery
-                    <input type="checkbox" name="favourite[]" value="5">PHP
-                    <input type="checkbox" name="favourite[]" value="6">Javascript
-                    <input type="checkbox" name="favourite[]" value="7">音乐
-                    <input type="checkbox" name="favourite[]" value="8">泡妞
-                    <input type="checkbox" name="favourite[]" value="9"><span>足球</span>
-                </td>
-            </tr>
-            <tr>
-                <td>喜欢的运动</td>
-                <td>
-                    <input type="checkbox" name="sport[]" value="1">乒乓
-                    <input type="checkbox" name="sport[]" value="2">篮球
-                    <input type="checkbox" name="sport[]" value="3">登山
-                    <input type="checkbox" name="sport[]" value="4">滑雪
-                    <input type="checkbox" name="sport[]" value="5"><span>足球</span>
-                </td>
-            </tr>
-            <tr>
-                <td>设定一个折扣</td>
-                <td>
-                    <input type="text" name="skyzhekou">
-                </td>
-            </tr>
-            <select name="sel" id="sel">
-                <option value="">a</option>
-            </select>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="button" value="注册" />
-                </td>
-            </tr>
-        </table>
-    </form>
+  <h3>Jquery表单验证</h3>
+  <form id="form3" method="post" action="post.php">
+    <p>
+      <input type="text" name="info2[login]" style="width:200px;" value="test111" validate='{rule:"username",success:"ok",error:"好好填写用户名",tips:"用户名提示信息" }' />
+    </p>
+    <br />
+    <p>
+      <input type="password" name="info[password]" style="width:200px" value="" validate='{rule:"password",tips:"passwd数字和英文及下划线和.的组合，开头为字母，4-20个字符" }' />
+    </p>
+    <br />
+    <p>
+      <input name="acceptFlyme" id="accept" type="checkbox" value="1" checked='checked'>123
+    </p>
+    <br />
+    <p> <input type="text" name="fajax" style="width:200px" value="" validate='{rule:"strongpwd",tips:"123",ajax:{url: "./ajax.php"} }' />
+    </p>
+    <br />
+    <p> <input type="radio" name="sex" value="1" />男 <input type="radio" name="sex" value="2" />女</p>
+    <p> <input type="text" name="sex2"></p>
+    <input type="submit" class="button" value="注册" />
+    <br />
+  </form>
+  <form id="form2" method="post" action="post.php">
+    <div class="success">下面是一个同时进行表单验证和表单无刷新提交的例子，返回的数据格式是JSON形式</div>
+    <table width="100%">
+      <tr>
+        <td width="120">
+          用户名：
+        </td>
+        <td>
+          <input type="text" name="info[login]" style="width:200px;" value="test" validate='{rule:"username",error:"好好填写用户名",tips:"数字和英文及下划线和.的组合，开头为字母，4-20个字符" }' />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          设置密码：
+        </td>
+        <td>
+          <input type="password" name="info[password]" style="width:200px" value="KXt7kGsBddsd" validate='{rule:"password",error:"密码格式不正确",tips:"数字和英文及下划线和.的组合，开头为字母，4-20个字符" }' />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          确认密码：
+        </td>
+        <td>
+          <input type="password" name="info[confirm_password]" style="width:200px" value="KXt7kGsBddsd" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Email：
+        </td>
+        <td>
+          <input type="text" name="info[email]" style="width:200px;" value="sky64566@yahoo.com.cn" />
+        </td>
+      </tr>
+      <tr>
+        <td width="120">
+          年龄：
+        </td>
+        <td>
+          <input type="text" name="info[age]" style="width:200px;" value="test" />
+        </td>
+      </tr>
+      <tr>
+        <td width="120">
+          工作年限：
+        </td>
+        <td>
+          <input type="text" name="info[do_years]" style="width:200px;" value="test" />
+        </td>
+      </tr>
+      <tr>
+        <td>兴趣爱好</td>
+        <td>
+          <input type="checkbox" name="favourite[]" value="1">上网
+          <input type="checkbox" name="favourite[]" value="2">看书
+          <input type="checkbox" name="favourite[]" value="3">书法
+          <input type="checkbox" name="favourite[]" value="4">Jquery
+          <input type="checkbox" name="favourite[]" value="5">PHP
+          <input type="checkbox" name="favourite[]" value="6">Javascript
+          <input type="checkbox" name="favourite[]" value="7">音乐
+          <input type="checkbox" name="favourite[]" value="8">泡妞
+          <input type="checkbox" name="favourite[]" value="9"><span>足球</span>
+        </td>
+      </tr>
+      <tr>
+        <td>喜欢的运动</td>
+        <td>
+          <input type="checkbox" name="sport[]" value="1">乒乓
+          <input type="checkbox" name="sport[]" value="2">篮球
+          <input type="checkbox" name="sport[]" value="3">登山
+          <input type="checkbox" name="sport[]" value="4">滑雪
+          <input type="checkbox" name="sport[]" value="5"><span>足球</span>
+        </td>
+      </tr>
+      <tr>
+        <td>设定一个折扣</td>
+        <td>
+          <input type="text" name="skyzhekou">
+        </td>
+      </tr>
+      <select name="sel" id="sel">
+        <option value="">a</option>
+      </select>
+      <tr>
+        <td colspan="2">
+          <input type="submit" class="button" value="注册" />
+        </td>
+      </tr>
+    </table>
+  </form>
 </body>
 
 </html>
